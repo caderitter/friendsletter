@@ -10,19 +10,27 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from imapclient.imapclient import IMAPClient
 from config import config
+import logging
 
-SCOPES = ["https://mail.google.com/"]
-
+logger = logging.getLogger(__name__)
+SCOPES = [config["email"]["scope"]]
+EMAIL_ADDRESS = config["email"]["address"]
+IMAP_SERVER = config["email"]["imap_server"]
+SMTP_SERVER = config["email"]["smtp_server"]
 
 def get_credentials():
+    logger.debug("Getting credentials for email access...")
     creds = None
     if os.path.exists("token.json"):
+        logger.debug("Loading credentials from token.json...")
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
+            logger.debug("Refreshing expired credentials...")
             creds.refresh(Request())
         else:
+            logger.debug("No valid credentials found, initiating OAuth flow...")
             flow = InstalledAppFlow.from_client_secrets_file(
                 "client_secrets.json", SCOPES
             )
@@ -36,10 +44,13 @@ def get_credentials():
 def log_in_to_imap_and_listen(handle_message_callback):
     creds = get_credentials()
 
-    with IMAPClient("imap.gmail.com", use_uid=True, ssl=True) as server:
-        server.oauth2_login(config["email"], creds.token)
+    with IMAPClient(IMAP_SERVER, use_uid=True, ssl=True) as server:
+        logger.debug("Logging in to IMAP server...")
+        server.oauth2_login(EMAIL_ADDRESS, creds.token)
         server.select_folder("INBOX")
         server.idle()
+        logger.info("Listening for new emails...")
+
         while True:
             responses = server.idle_check(timeout=30)
             if responses:
@@ -97,7 +108,7 @@ def parse_message(raw_email_bytes):
 
 def send_email(to_address, subject, body_plain, body_html):
     msg = MIMEMultipart("alternative")
-    msg["From"] = config["email"]
+    msg["From"] = EMAIL_ADDRESS
     msg["To"] = to_address
     msg["Subject"] = subject
 
@@ -108,12 +119,12 @@ def send_email(to_address, subject, body_plain, body_html):
     msg.attach(html)
 
     creds = get_credentials()
-    auth_string = f"user={config['email']}\1auth=Bearer {creds.token}\1\1"
-    smtp_conn = smtplib.SMTP_SSL("smtp.gmail.com", 465)
+    auth_string = f"user={EMAIL_ADDRESS}\1auth=Bearer {creds.token}\1\1"
+    smtp_conn = smtplib.SMTP_SSL(SMTP_SERVER, 465)
     smtp_conn.ehlo()
 
     smtp_conn.docmd(
         "AUTH", "XOAUTH2 " + base64.b64encode(auth_string.encode()).decode()
     )
-    smtp_conn.sendmail(config["email"], [to_address], msg.as_string())
+    smtp_conn.sendmail(EMAIL_ADDRESS, [to_address], msg.as_string())
     smtp_conn.quit()

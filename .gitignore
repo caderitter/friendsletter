@@ -13,3 +13,5 @@ client_secrets.json
 token.json
 config.toml
 friends.csv
+friendslist.db
+friendslist.log
