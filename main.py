@@ -5,12 +5,13 @@ from auth_helpers import get_credentials
 from calendar_helpers import get_events
 from config import config
 from email_helpers import parse_message_and_save_attachments
-from db import get_all_messages_for_fortnight, init_db, insert_message
+from db import get_all_messages_for_delta, init_db, insert_message
 from start_date import StartDate
 
 logger = logging.getLogger(__name__)
 IMAP_SERVER = config["email"]["imap_server"]
 EMAIL_ADDRESS = config["email"]["address"]
+DELTA_DAYS = config["server"]["delta_days"]
 
 
 def handle_new_message(raw_email_bytes):
@@ -60,7 +61,7 @@ def main():
             if start_date.delta_has_elapsed():
                 logger.info("Two weeks have passed since the start date")
                 events = get_events()
-                all_messages = get_all_messages_for_fortnight(start_date.date)
+                all_messages = get_all_messages_for_delta(start_date.date, DELTA_DAYS)
                 start_date.advance_date()
                 # TODO send email to friends with the messages from the last two weeks
 

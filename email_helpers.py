@@ -9,7 +9,6 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from imapclient.imapclient import IMAPClient
 from PIL import Image
 
 from auth_helpers import get_credentials

@@ -28,7 +28,7 @@ def get_credentials():
                 "client_secrets.json", SCOPES
             )
             creds = flow.run_local_server(port=0)
-        with open("token.json", "w") as f:
+        with open("token.json", "w", encoding="utf-8") as f:
             f.write(creds.to_json())
 
     return creds
