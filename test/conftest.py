@@ -11,13 +11,13 @@ parent_dir = os.path.dirname(current_dir)
 if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 
-from db import init_db
+from db import get_db_connection, init_db
 
 
 @pytest.fixture(scope="function")
 def db_connection():
     # Create a new in-memory database for each test
-    conn = sqlite3.connect(":memory:")
+    conn = get_db_connection(":memory:")
 
     fake_csv_data = "name,email\nAlice,alice@gmail.com\nBob,bob@gmail.com\n"
 

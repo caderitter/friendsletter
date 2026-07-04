@@ -1,10 +1,16 @@
 from datetime import timedelta
 import csv
 import logging
+import sqlite3
 
 
 logger = logging.getLogger(__name__)
 
+
+def get_db_connection(db_name):
+    conn = sqlite3.connect(db_name)
+    conn.row_factory = sqlite3.Row
+    return conn
 
 def init_db(conn, friends_csv_path):
     """
@@ -52,15 +58,6 @@ def init_db(conn, friends_csv_path):
     """)
 
     cur.execute("""
-        CREATE TABLE IF NOT EXISTS events (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            friend_id INTEGER REFERENCES friends(id),
-            date DATE NOT NULL,
-            description TEXT NOT NULL
-        )
-    """)
-
-    cur.execute("""
         CREATE TABLE IF NOT EXISTS start_date (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             date DATE NOT NULL
@@ -102,11 +99,10 @@ def get_all_messages_for_delta(conn, datetime, delta_days):
     cur = conn.cursor()
     cur.execute(
         """
-        SELECT f.name, f.email, a.file_path, e.date, e.description, m.subject, m.body_plain, m.body_html, m.received_at
+        SELECT f.name, f.email, a.file_path, m.subject, m.body_plain, m.body_html, m.received_at
         FROM messages m
         JOIN friends f ON m.friend_id = f.id
-        JOIN attachments a ON m.id = a.message_id
-        JOIN events e ON f.id = e.friend_id
+        LEFT JOIN attachments a ON m.id = a.message_id
         WHERE m.received_at BETWEEN ? AND ?
         ORDER BY m.received_at DESC
     """,
