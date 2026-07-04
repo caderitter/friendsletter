@@ -14,7 +14,7 @@ IMAP_SERVER = config["email"]["imap_server"]
 EMAIL_ADDRESS = config["email"]["address"]
 DELTA_DAYS = config["server"]["delta_days"]
 DB_PATH = config["server"]["db_path"]
-
+FRIENDS_CSV_PATH = config["server"]["friends_csv_path"]
 
 def handle_new_message(raw_email_bytes):
     parsed = parse_message_and_save_attachments(raw_email_bytes)
@@ -53,7 +53,7 @@ def handle_time_delta_elapsed(start_date):
 def main():
     logging.basicConfig(level=logging.INFO)
     with sqlite3.connect(DB_PATH) as conn:
-        init_db(conn)
+        init_db(conn, FRIENDS_CSV_PATH)
         start_date = StartDate(conn, DELTA_DAYS)
 
     creds = get_credentials()

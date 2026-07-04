@@ -2,14 +2,11 @@ from datetime import timedelta
 import csv
 import logging
 
-from config import config
-
 
 logger = logging.getLogger(__name__)
-FRIENDS_CSV_PATH = config["server"]["friends_csv_path"]
 
 
-def init_db(conn):
+def init_db(conn, friends_csv_path):
     """
     Create the database and tables if they don't exist, and populate
     the friends table from a CSV file.
@@ -26,7 +23,7 @@ def init_db(conn):
         )
     """)
     logger.debug("Populating the friends table from friends csv...")
-    with open(FRIENDS_CSV_PATH, "r", encoding="utf-8") as file:
+    with open(friends_csv_path, "r", encoding="utf-8") as file:
         csv_reader = csv.reader(file)
         next(csv_reader)  # Skip the header row
 
@@ -50,7 +47,7 @@ def init_db(conn):
         CREATE TABLE IF NOT EXISTS attachments (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             message_id INTEGER REFERENCES messages(id),
-            file_path TEXT NOT NULL,
+            file_path TEXT NOT NULL
         )
     """)
 
