@@ -106,7 +106,7 @@ def get_all_messages_for_delta(conn, datetime, delta_days):
             f.email, 
             json_group_array(
                 json_object('file_path', a.file_path, 'id', a.id)
-            ) AS as attachments, 
+            ) AS attachments, 
             m.subject, 
             m.body_plain, 
             m.body_html, 
