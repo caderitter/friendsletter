@@ -69,8 +69,7 @@ def handle_time_delta_elapsed(start_date: StartDate):
         today = datetime.today()
         main_html = render_email_body(today, messages, calendar_html)
         subject = f"Glizzy Friendsletter: {today.strftime('%Y-%m-%d')}"
-        # send_email(list(addresses_dict.keys()), subject, main_html, attachments)
-        send_email(["ritter.cade@gmail.com"], subject, main_html, attachments)
+        send_email(list(addresses_dict.keys()), subject, main_html, attachments)
         start_date.advance_date(conn)
 
 
