@@ -1,0 +1,9 @@
+[email]
+scope = "https://mail.google.com/"
+
+[server]
+delta_days = 14
+
+[calendar]
+url = "https://calendar.google.com/calendar/u/2?cid=some_calendar_id"
+scope = "https://www.googleapis.com/auth/calendar.readonly"

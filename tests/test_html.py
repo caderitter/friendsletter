@@ -81,6 +81,10 @@ def test_render_email_html_end_to_end(db_connection):
     )
 
     soup = BeautifulSoup(html, "html.parser")
+
+    anchor = soup.find('a')
+    assert anchor["href"] == "https://calendar.google.com/calendar/u/2?cid=some_calendar_id"
+
     text = soup.get_text(" ", strip=True)
 
     assert "Weekend plans" in text
