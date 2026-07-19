@@ -2,7 +2,7 @@ from unittest.mock import mock_open, patch
 
 import pytest
 
-from friendslist.db import get_db_connection, init_db
+from friendsletter.db import get_db_connection, init_db
 
 
 @pytest.fixture(scope="function")

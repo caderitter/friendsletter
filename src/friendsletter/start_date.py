@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, time
 from sqlite3 import Connection
 
-from friendslist.db import get_start_date, update_start_date
+from friendsletter.db import get_start_date, update_start_date
 
 
 class StartDate:

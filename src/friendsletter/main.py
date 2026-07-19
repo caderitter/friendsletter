@@ -4,20 +4,20 @@ from pprint import pformat
 
 from imapclient.imapclient import IMAPClient
 
-from friendslist.auth_helpers import get_credentials
-from friendslist.calendar_helpers import get_events
-from friendslist.config import config
-from friendslist.db import (
+from friendsletter.auth_helpers import get_credentials
+from friendsletter.calendar_helpers import get_events
+from friendsletter.config import config
+from friendsletter.db import (
     get_addresses_dict,
     get_all_messages_for_delta,
     get_db_connection,
     init_db,
     insert_message,
 )
-from friendslist.email_helpers import parse_message_and_save_attachments, send_email
-from friendslist.generate_calendar import build_calendar_props
-from friendslist.html_helpers import render_email_body
-from friendslist.start_date import StartDate
+from friendsletter.email_helpers import parse_message_and_save_attachments, send_email
+from friendsletter.generate_calendar import build_calendar_props
+from friendsletter.html_helpers import render_email_body
+from friendsletter.start_date import StartDate
 
 logger = logging.getLogger(__name__)
 IMAP_SERVER = config["email"]["imap_server"]

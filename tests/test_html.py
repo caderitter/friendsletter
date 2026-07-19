@@ -3,10 +3,10 @@ from unittest.mock import MagicMock, patch
 
 from bs4 import BeautifulSoup
 
-from friendslist.calendar_helpers import get_events
-from friendslist.db import get_addresses_dict, get_all_messages_for_delta, insert_message
-from friendslist.generate_calendar import build_calendar_props
-from friendslist.html_helpers import render_email_body
+from friendsletter.calendar_helpers import get_events
+from friendsletter.db import get_addresses_dict, get_all_messages_for_delta, insert_message
+from friendsletter.generate_calendar import build_calendar_props
+from friendsletter.html_helpers import render_email_body
 
 
 def test_render_email_html_end_to_end(db_connection):
@@ -66,8 +66,8 @@ def test_render_email_html_end_to_end(db_connection):
     )
 
     with (
-        patch("friendslist.calendar_helpers.get_credentials"),
-        patch("friendslist.calendar_helpers.build", return_value=mock_service),
+        patch("friendsletter.calendar_helpers.get_credentials"),
+        patch("friendsletter.calendar_helpers.build", return_value=mock_service),
     ):
         addresses_dict = get_addresses_dict(db_connection)
         events = get_events(addresses_dict)

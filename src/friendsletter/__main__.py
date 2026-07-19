@@ -1,4 +1,4 @@
-from friendslist.main import main
+from friendsletter.main import main
 
 if __name__ == "__main__":
     main()

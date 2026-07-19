@@ -2,7 +2,7 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
 
-from friendslist.config import config
+from friendsletter.config import config
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 env = Environment(loader=FileSystemLoader(TEMPLATES_DIR))
