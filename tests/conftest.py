@@ -12,8 +12,8 @@ def db_connection():
 
     fake_csv_data = "name,email\nAlice,alice@gmail.com\nBob,bob@gmail.com\n"
 
-    # mock the csv read to return fake data before initializing db
+    # mock csv open only during init so Jinja can load real templates later
     with patch("builtins.open", mock_open(read_data=fake_csv_data)):
         init_db(conn, "fake_path.csv")
-        yield conn
-        conn.close()
+    yield conn
+    conn.close()
